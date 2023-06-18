@@ -2,10 +2,12 @@ const mongoose =  require('mongoose')// importación de mongoose
 
         //problema: mongodb://localhost:27017/
         //solución:
-//const MONGOOSE_URI='mongodb://157.100.88.248/32/' //devuelve una promesa ; para base de datos local
+//const MONGOOSE_URI='mongodb://0.0.0.0:27017/portafolio' //devuelve una promesa ; PARA EL USO DE MONGODB LOCAL
 
+// PARA EL USO DE MONGODB ATLAS
 const {DBUSER,DBPASSWORD,DBNAME} = process.env // desustructurar los datos
-const MONGODB_URI = `mongodb+srv://${DBUSER}:${DBPASSWORD}@cluster0.ahho5ov.mongodb.net/${DBNAME}` // desustructurar los datos en atlas
+const MONGODB_URI = `mongodb+srv://${DBUSER}:${DBPASSWORD}@cluster0.ahho5ov.mongodb.net/${DBNAME}` // desustructurar los datos
+
 // .env: ubicamos los datos sensibles
 
 connection = async ()=>{ // para trabajar con promesas

@@ -36,4 +36,4 @@ userSchema.methods.matchPassword = async function(password){
 }
 
 
-module.exports = model('user',userSchema) // user asociado a userScheme (esquema)
+module.exports = model('User',userSchema) // user asociado a userScheme (esquema)

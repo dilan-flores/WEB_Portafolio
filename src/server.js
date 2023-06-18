@@ -1,13 +1,17 @@
 const express = require('express') // crea una aplicación express
 const path = require('path'); // para mitigar el problemar de que no coge la ruta completa
 const { engine }  = require('express-handlebars') // para el motor de plantillas
-
+const methodOverride = require('method-override'); // invocar el método methOverride
+const passport = require('passport');
+const session = require('express-session');
         //const app = express()
         //module.exports = app // una exportación por defecto  de app
 
 
 // Inicializaciones
 const app = express()
+// INVOCAR EL ARCHIVO PASSPORT
+require('./config/passport')
 
 // Configuraciones 
 app.set('port',process.env.port || 3000) // si se le asigna un puerto o si no utilizar el puerto 3000
@@ -27,22 +31,42 @@ app.use(express.urlencoded({extended:false}))
             // para trabajar con apis: expres.json
             // paratrabajar con documentos express.urlencode // se especifica para utilizar servidor(o algo así)   
 
+app.use(methodOverride('_method')) // usp del método (con esto procedemos a abrir nuevas vistas y capturar, guardar datos de página)
+// CREAMOS LA KEY PARA EL SERVIDOR - secret
+app.use(session({ 
+    secret: 'secret',
+    resave:true,
+    saveUninitialized:true
+}));
+// INICIALIZAR PASSPORT
+app.use(passport.initialize())
+// INICIALIZAR SESSION
+app.use(passport.session())
+
+
 
 // Variables globales
+app.use((req,res,next)=>{
+    res.locals.user = req.user?.name || null
+    next()
+})
+            // Rutas : las rutas para que no esté todo revuelto, se ubican en index.routes.js
 
-// Rutas 
-
-/*
+/* // se ubica en index.routes.js
 app.get('/',(req,res)=>{
     res.send("Server on")
 })
 
 */
+/* // se ubica en index.routes.js
 app.get('/',(req,res)=>{ // para el uso de .hbs
     res.render('index')//renderizar
 })
+*/
 
-app.use(require('./routers/index.routes')) // para el login
+app.use(require('./routers/index.routes')) // Recibe las rutas desde index.routes.j
+app.use(require('./routers/portafolio.routes')) // Recibe las rutas de portafolio.routes.js ; se sustituye por user.routes
+app.use(require('./routers/user.routes'))
 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname,'public'))) // otro middlewares // path para especificar la ruta // es un directorio público
